@@ -17,14 +17,21 @@
 
 'use strict';
 
-const replace = String.prototype.replace;
-const split = String.prototype.split;
-
 // #### Pluralization methods
 // The string that separates the different phrase possibilities.
 const delimiter = '||||';
 
-const russianPluralGroups =  (n) => {
+type Phrases = Record<string, string>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Substitutions = number | Record<string, any>;
+type Language = string;
+type PluralType = string;
+interface PluralRules {
+  pluralTypes: Record<PluralType, (n: number) => number>;
+  pluralTypeToLanguages: Record<PluralType, Language[]>;
+}
+
+const russianPluralGroups =  (n: number) => {
   const lastTwo = n % 100;
   const end = lastTwo % 10;
   if (lastTwo !== 11 && end === 1) {
@@ -36,7 +43,7 @@ const russianPluralGroups =  (n) => {
   return 2;
 };
 
-const defaultPluralRules = {
+const defaultPluralRules: PluralRules = {
   // Mapping from pluralization group plural logic.
   pluralTypes: {
     arabic:  (n)=> {
@@ -100,8 +107,8 @@ const defaultPluralRules = {
   }
 };
 
-function langToTypeMap(mapping) {
-  const ret = {};
+function langToTypeMap(mapping: Record<string, string[]>): Record<Language, PluralType> {
+  const ret: Record<Language, PluralType> = {};
   Object.keys(mapping).forEach((type) => {
     mapping[type].forEach((lang) => {
       ret[lang] = type;
@@ -110,22 +117,22 @@ function langToTypeMap(mapping) {
   return ret;
 }
 
-function pluralTypeName(pluralRules, locale) {
+function pluralTypeName(pluralRules: PluralRules, locale: Language) {
   const langToPluralType = langToTypeMap(pluralRules.pluralTypeToLanguages);
   return langToPluralType[locale]
-    || langToPluralType[split.call(locale, /-/, 1)[0]]
+    || langToPluralType[locale.split(/-/, 1)[0]]
     || langToPluralType['en'];
 }
 
-function pluralTypeIndex(pluralRules, locale, count) {
+function pluralTypeIndex(pluralRules:PluralRules, locale: Language, count:number) {
   return pluralRules.pluralTypes[pluralTypeName(pluralRules, locale)](count);
 }
 
-function escape(token) {
+function escape(token: string) {
   return token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function constructTokenRegex(opts) {
+function constructTokenRegex(opts: {prefix: string; suffix: string;}) {
   const prefix = (opts && opts.prefix) || '%{';
   const suffix = (opts && opts.suffix) || '}';
 
@@ -161,7 +168,7 @@ const defaultTokenRegex = /%\{(.*?)\}/g;
 //
 // You should pass in a third argument, the locale, to specify the correct plural type.
 // It defaults to `'en'` with 2 plural forms.
-function transformPhrase(phrase, substitutions, locale, tokenRegex, pluralRules) {
+function transformPhrase(phrase: string, substitutions: Substitutions, locale: string, tokenRegex: RegExp, pluralRules: PluralRules) {
   if (typeof phrase !== 'string') {
     throw new TypeError('Polyglot.transformPhrase expects argument #1 to be string');
   }
@@ -175,30 +182,41 @@ function transformPhrase(phrase, substitutions, locale, tokenRegex, pluralRules)
   const pluralRulesOrDefault = pluralRules || defaultPluralRules;
 
   // allow number as a pluralization shortcut
+  const smart_count: number | undefined = typeof substitutions === 'number' ? substitutions : substitutions.smart_count;
   const options = typeof substitutions === 'number' ? { smart_count: substitutions } : substitutions;
 
   // Select plural form: based on a phrase text that contains `n`
   // plural forms separated by `delimiter`, a `locale`, and a `substitutions.smart_count`,
   // choose the correct plural form. This is only done if `count` is set.
-  if (options.smart_count != null && result) {
-    const texts = split.call(result, delimiter);
-    result = texts[pluralTypeIndex(pluralRulesOrDefault, locale || 'en', options.smart_count)] || texts[0];
+  if (smart_count !== undefined && result) {
+    const texts = result.split(delimiter);
+    result = texts[pluralTypeIndex(pluralRulesOrDefault, locale || 'en', smart_count)] || texts[0];
     if (typeof result.trim === 'function') {
       result = result.trim();
     }
   }
 
   // Interpolate: Creates a `RegExp` object for each interpolation placeholder.
-  result = replace.call(result, interpolationRegex, (expression, argument) => {
-    if (options[argument] === undefined || options[argument] === null) { return expression; }
-    return options[argument];
-  });
-
+  result = result.replace(interpolationRegex, (expression, argument) => options[argument] ?? expression);
   return result;
 }
 
+
+interface PolyglotOptions {
+  phrases: Phrases;
+  locale: Language;
+  allowMissing: boolean;
+  onMissingKey: typeof transformPhrase;
+  interpolation: {
+    prefix: string;
+    suffix: string;
+  };
+  pluralRules: PluralRules;
+  warn: (message: string) => void;
+}
+
 // ### Polyglot class constructor
-function Polyglot(options) {
+function Polyglot(options: Partial<PolyglotOptions>) {
   const opts = options || {};
   this.phrases = {};
   this.extend(opts.phrases || {});
@@ -213,7 +231,7 @@ function Polyglot(options) {
 // ### polyglot.locale([locale])
 //
 // Get or set locale. Internally, Polyglot only uses locale for pluralization.
-Polyglot.prototype.locale = function (newLocale) {
+Polyglot.prototype.locale = function (newLocale: Language) {
   if (newLocale) this.currentLocale = newLocale;
   return this.currentLocale;
 };
@@ -267,7 +285,7 @@ Polyglot.prototype.locale = function (newLocale) {
 //     // }
 //
 // This feature is used internally to support nested phrase objects.
-Polyglot.prototype.extend = function (morePhrases, prefix) {
+Polyglot.prototype.extend = function (morePhrases: Phrases, prefix?: string) {
   Object.keys(morePhrases).forEach( (key) => {
     const phrase = morePhrases[key];
     const prefixedKey = prefix ? prefix + '.' + key : key;
@@ -290,7 +308,7 @@ Polyglot.prototype.extend = function (morePhrases, prefix) {
 //
 // The unset method can take either a string (for the key), or an object hash with
 // the keys that you would like to unset.
-Polyglot.prototype.unset = function (morePhrases, prefix) {
+Polyglot.prototype.unset = function (morePhrases: Phrases, prefix?: string) {
   if (typeof morePhrases === 'string') {
     delete this.phrases[morePhrases];
   } else {
@@ -320,7 +338,7 @@ Polyglot.prototype.clear = function () {
 // Completely replace the existing phrases with a new set of phrases.
 // Normally, just use `extend` to add more phrases, but under certain
 // circumstances, you may want to make sure no old phrases are lying around.
-Polyglot.prototype.replace = function (newPhrases) {
+Polyglot.prototype.replace = function (newPhrases: Phrases) {
   this.clear();
   this.extend(newPhrases);
 };
@@ -350,15 +368,15 @@ Polyglot.prototype.replace = function (newPhrases) {
 //     });
 //     => "I like to write in JavaScript."
 //
-Polyglot.prototype.t = function (key, options) {
+Polyglot.prototype.t = function (key: string, options: Substitutions) {
   let phrase, result;
   const opts = options == null ? {} : options;
   if (typeof this.phrases[key] === 'string') {
     phrase = this.phrases[key];
-  } else if (typeof opts._ === 'string') {
+  } else if (typeof opts === 'object' && typeof opts._ === 'string') {
     phrase = opts._;
   } else if (this.onMissingKey) {
-    const onMissingKey = this.onMissingKey;
+    const onMissingKey: typeof transformPhrase = this.onMissingKey;
     result = onMissingKey(key, opts, this.currentLocale, this.tokenRegex, this.pluralRules);
   } else {
     this.warn('Missing translation for key: "' + key + '"');
@@ -373,12 +391,12 @@ Polyglot.prototype.t = function (key, options) {
 // ### polyglot.has(key)
 //
 // Check if polyglot has a translation for given key
-Polyglot.prototype.has = function (key) {
+Polyglot.prototype.has = function (key: string) {
   return this.phrases[key] !== undefined;
 };
 
 // export transformPhrase
-Polyglot.transformPhrase = function transform(phrase, substitutions, locale) {
+Polyglot.transformPhrase = function transform(phrase: string, substitutions: Substitutions, locale: Language) {
   return transformPhrase(phrase, substitutions, locale, undefined, undefined);
 };
 
