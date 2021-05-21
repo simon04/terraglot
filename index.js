@@ -18,7 +18,6 @@
 'use strict';
 
 var forEach = require('for-each');
-var has = require('has');
 
 var replace = String.prototype.replace;
 var split = String.prototype.split;
@@ -193,7 +192,7 @@ function transformPhrase(phrase, substitutions, locale, tokenRegex, pluralRules)
 
   // Interpolate: Creates a `RegExp` object for each interpolation placeholder.
   result = replace.call(result, interpolationRegex, function (expression, argument) {
-    if (!has(options, argument) || options[argument] == null) { return expression; }
+    if (options[argument] === undefined || options[argument] === null) { return expression; }
     return options[argument];
   });
 
@@ -375,7 +374,7 @@ Polyglot.prototype.t = function (key, options) {
 //
 // Check if polyglot has a translation for given key
 Polyglot.prototype.has = function (key) {
-  return has(this.phrases, key);
+  return this.phrases[key] !== undefined;
 };
 
 // export transformPhrase
