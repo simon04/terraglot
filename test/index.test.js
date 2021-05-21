@@ -2,7 +2,7 @@
 
 var Polyglot = require('../');
 
-describe('t', function () {
+describe('t', () => {
   var phrases = {
     hello: 'Hello',
     hi_name_welcome_to_place: 'Hi, %{name}, welcome to %{place}!',
@@ -11,105 +11,105 @@ describe('t', function () {
   };
 
   var polyglot;
-  beforeEach(function () {
+  beforeEach(() => {
     polyglot = new Polyglot({ phrases: phrases });
   });
 
-  it('translates a simple string', function () {
+  it('translates a simple string', () => {
     expect(polyglot.t('hello')).toBe('Hello');
   });
 
-  it('returns the key if translation not found', function () {
+  it('returns the key if translation not found', () => {
     expect(polyglot.t('bogus_key')).toBe('bogus_key');
   });
 
-  it('interpolates', function () {
+  it('interpolates', () => {
     expect(polyglot.t('hi_name_welcome_to_place', {
       name: 'Spike',
       place: 'the webz'
     })).toBe('Hi, Spike, welcome to the webz!');
   });
 
-  it('interpolates with missing substitutions', function () {
+  it('interpolates with missing substitutions', () => {
     expect(polyglot.t('hi_name_welcome_to_place', {
       place: undefined
     })).toBe('Hi, %{name}, welcome to %{place}!');
   });
 
-  it('interpolates the same placeholder multiple times', function () {
+  it('interpolates the same placeholder multiple times', () => {
     expect(polyglot.t('name_your_name_is_name', {
       name: 'Spike'
     })).toBe('Spike, your name is Spike!');
   });
 
-  it('allows you to supply default values', function () {
+  it('allows you to supply default values', () => {
     expect(polyglot.t('can_i_call_you_name', {
       _: 'Can I call you %{name}?',
       name: 'Robert'
     })).toBe('Can I call you Robert?');
   });
 
-  it('returns the non-interpolated key if not initialized with allowMissing and translation not found', function () {
+  it('returns the non-interpolated key if not initialized with allowMissing and translation not found', () => {
     expect(polyglot.t('Welcome %{name}', {
       name: 'Robert'
     })).toBe('Welcome %{name}');
   });
 
-  it('returns an interpolated key if initialized with allowMissing and translation not found', function () {
+  it('returns an interpolated key if initialized with allowMissing and translation not found', () => {
     var instance = new Polyglot({ phrases: phrases, allowMissing: true });
     expect(instance.t('Welcome %{name}', {
       name: 'Robert'
     })).toBe('Welcome Robert');
   });
 
-  describe('custom interpolation syntax', function () {
+  describe('custom interpolation syntax', () => {
     var createWithInterpolation = function (interpolation) {
       return new Polyglot({ phrases: {}, allowMissing: true, interpolation: interpolation });
     };
 
-    it('interpolates with the specified custom token syntax', function () {
+    it('interpolates with the specified custom token syntax', () => {
       var instance = createWithInterpolation({ prefix: '{{', suffix: '}}' });
       expect(instance.t('Welcome {{name}}', {
         name: 'Robert'
       })).toBe('Welcome Robert');
     });
 
-    it('interpolates if the prefix and suffix are the same', function () {
+    it('interpolates if the prefix and suffix are the same', () => {
       var instance = createWithInterpolation({ prefix: '|', suffix: '|' });
       expect(instance.t('Welcome |name|, how are you, |name|?', {
         name: 'Robert'
       })).toBe('Welcome Robert, how are you, Robert?');
     });
 
-    it('interpolates when using regular expression tokens', function () {
+    it('interpolates when using regular expression tokens', () => {
       var instance = createWithInterpolation({ prefix: '\\s.*', suffix: '\\d.+' });
       expect(instance.t('Welcome \\s.*name\\d.+', {
         name: 'Robert'
       })).toBe('Welcome Robert');
     });
 
-    it('throws an error when either prefix or suffix equals to pluralization delimiter', function () {
-      expect(function () { createWithInterpolation({ prefix: '||||', suffix: '}}' }); }).toThrowError(RangeError);
-      expect(function () { createWithInterpolation({ prefix: '{{', suffix: '||||' }); }).toThrowError(RangeError);
+    it('throws an error when either prefix or suffix equals to pluralization delimiter', () => {
+      expect(() => { createWithInterpolation({ prefix: '||||', suffix: '}}' }); }).toThrowError(RangeError);
+      expect(() => { createWithInterpolation({ prefix: '{{', suffix: '||||' }); }).toThrowError(RangeError);
     });
   });
 
-  it('returns the translation even if it is an empty string', function () {
+  it('returns the translation even if it is an empty string', () => {
     expect(polyglot.t('empty_string')).toBe('');
   });
 
-  it('returns the default value even if it is an empty string', function () {
+  it('returns the default value even if it is an empty string', () => {
     expect(polyglot.t('bogus_key', { _: '' })).toBe('');
   });
 
-  it('handles dollar signs in the substitution value', function () {
+  it('handles dollar signs in the substitution value', () => {
     expect(polyglot.t('hi_name_welcome_to_place', {
       name: '$abc $0',
       place: '$1 $&'
     })).toBe('Hi, $abc $0, welcome to $1 $&!');
   });
 
-  it('supports nested phrase objects', function () {
+  it('supports nested phrase objects', () => {
     var nestedPhrases = {
       nav: {
         presentations: 'Presentations',
@@ -127,8 +127,8 @@ describe('t', function () {
     expect(instance.t('header.sign_in')).toBe('Sign In');
   });
 
-  describe('onMissingKey', function () {
-    it('calls the function when a key is missing', function () {
+  describe('onMissingKey', () => {
+    it('calls the function when a key is missing', () => {
       var expectedKey = 'some key';
       var expectedOptions = {};
       var expectedLocale = 'oz';
@@ -144,7 +144,7 @@ describe('t', function () {
       expect(result).toBe(returnValue);
     });
 
-    it('overrides allowMissing', function (done) {
+    it('overrides allowMissing', (done) => {
       var missingKey = 'missing key';
       var onMissingKey = function (key) {
         expect(key).toBe(missingKey);
@@ -156,39 +156,39 @@ describe('t', function () {
   });
 });
 
-describe('pluralize', function () {
+describe('pluralize', () => {
   var phrases = {
     count_name: '%{smart_count} Name |||| %{smart_count} Names'
   };
 
   var polyglot;
-  beforeEach(function () {
+  beforeEach(() => {
     polyglot = new Polyglot({ phrases: phrases, locale: 'en' });
   });
 
-  it('supports pluralization with an integer', function () {
+  it('supports pluralization with an integer', () => {
     expect(polyglot.t('count_name', { smart_count: 0 })).toBe('0 Names');
     expect(polyglot.t('count_name', { smart_count: 1 })).toBe('1 Name');
     expect(polyglot.t('count_name', { smart_count: 2 })).toBe('2 Names');
     expect(polyglot.t('count_name', { smart_count: 3 })).toBe('3 Names');
   });
 
-  it('accepts a number as a shortcut to pluralize a word', function () {
+  it('accepts a number as a shortcut to pluralize a word', () => {
     expect(polyglot.t('count_name', 0)).toBe('0 Names');
     expect(polyglot.t('count_name', 1)).toBe('1 Name');
     expect(polyglot.t('count_name', 2)).toBe('2 Names');
     expect(polyglot.t('count_name', 3)).toBe('3 Names');
   });
 
-  it('ignores a region subtag when choosing a pluralization rule', function () {
+  it('ignores a region subtag when choosing a pluralization rule', () => {
     var instance = new Polyglot({ phrases: phrases, locale: 'fr-FR' });
     // French rule: "0" is singular
     expect(instance.t('count_name', 0)).toBe('0 Name');
   });
 });
 
-describe('locale-specific pluralization rules', function () {
-  it('pluralizes in Arabic', function () {
+describe('locale-specific pluralization rules', () => {
+  it('pluralizes in Arabic', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       'ولا صوت',
@@ -212,7 +212,7 @@ describe('locale-specific pluralization rules', function () {
     expect(polyglot.t('n_votes', 102)).toBe('102 صوت');
   });
 
-  it('pluralizes in Russian', function () {
+  it('pluralizes in Russian', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       '%{smart_count} машина',
@@ -250,7 +250,7 @@ describe('locale-specific pluralization rules', function () {
     expect(polyglotLocaleId.t('n_votes', 15)).toBe('15 машин');
   });
 
-  it('pluralizes in Croatian (guest) Test', function () {
+  it('pluralizes in Croatian (guest) Test', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       '%{smart_count} gost',
@@ -279,7 +279,7 @@ describe('locale-specific pluralization rules', function () {
     expect(polyglotLocale.t('n_guests', 114)).toBe('114 gostiju');
   });
 
-  it('pluralizes in Croatian (vote) Test', function () {
+  it('pluralizes in Croatian (vote) Test', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       '%{smart_count} glas',
@@ -292,30 +292,30 @@ describe('locale-specific pluralization rules', function () {
 
     var polyglotLocale = new Polyglot({ phrases: phrases, locale: 'hr-HR' });
 
-    [1, 21, 31, 101].forEach(function (c) {
+    [1, 21, 31, 101].forEach((c) => {
       expect(polyglotLocale.t('n_votes', c)).toBe(c + ' glas');
     });
-    [2, 3, 4, 22, 23, 24, 32, 33, 34].forEach(function (c) {
+    [2, 3, 4, 22, 23, 24, 32, 33, 34].forEach((c) => {
       expect(polyglotLocale.t('n_votes', c)).toBe(c + ' glasa');
     });
-    [0, 5, 6, 11, 12, 13, 14, 15, 16, 17, 25, 26, 35, 36, 112, 113, 114].forEach(function (c) {
+    [0, 5, 6, 11, 12, 13, 14, 15, 16, 17, 25, 26, 35, 36, 112, 113, 114].forEach((c) => {
       expect(polyglotLocale.t('n_votes', c)).toBe(c + ' glasova');
     });
 
     var polyglotLanguageCode = new Polyglot({ phrases: phrases, locale: 'hr' });
 
-    [1, 21, 31, 101].forEach(function (c) {
+    [1, 21, 31, 101].forEach((c) => {
       expect(polyglotLanguageCode.t('n_votes', c)).toBe(c + ' glas');
     });
-    [2, 3, 4, 22, 23, 24, 32, 33, 34].forEach(function (c) {
+    [2, 3, 4, 22, 23, 24, 32, 33, 34].forEach((c) => {
       expect(polyglotLanguageCode.t('n_votes', c)).toBe(c + ' glasa');
     });
-    [0, 5, 6, 11, 12, 13, 14, 15, 16, 17, 25, 26, 35, 36, 112, 113, 114].forEach(function (c) {
+    [0, 5, 6, 11, 12, 13, 14, 15, 16, 17, 25, 26, 35, 36, 112, 113, 114].forEach((c) => {
       expect(polyglotLanguageCode.t('n_votes', c)).toBe(c + ' glasova');
     });
   });
 
-  it('pluralizes in Serbian (Latin & Cyrillic)', function () {
+  it('pluralizes in Serbian (Latin & Cyrillic)', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       '%{smart_count} miš',
@@ -353,7 +353,7 @@ describe('locale-specific pluralization rules', function () {
     expect(polyglotCyrillic.t('n_votes', 0)).toBe('0 miševa');
   });
 
-  it('pluralizes in Bosnian (Latin & Cyrillic)', function () {
+  it('pluralizes in Bosnian (Latin & Cyrillic)', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       '%{smart_count} članak',
@@ -399,7 +399,7 @@ describe('locale-specific pluralization rules', function () {
     expect(polyglotCyrillic.t('n_votes', 0)).toBe('0 članaka');
   });
 
-  it('pluralizes in Czech', function () {
+  it('pluralizes in Czech', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       '%{smart_count} komentář',
@@ -422,7 +422,7 @@ describe('locale-specific pluralization rules', function () {
     expect(polyglot.t('n_votes', 16)).toBe('16 komentářů');
   });
 
-  it('pluralizes in Slovenian', function () {
+  it('pluralizes in Slovenian', () => {
     // English would be: "1 vote" / "%{smart_count} votes"
     var whatSomeoneTranslated = [
       '%{smart_count} komentar',
@@ -436,20 +436,20 @@ describe('locale-specific pluralization rules', function () {
 
     var polyglot = new Polyglot({ phrases: phrases, locale: 'sl-SL' });
 
-    [1, 12301, 101, 1001, 201, 301].forEach(function (c) {
+    [1, 12301, 101, 1001, 201, 301].forEach((c) => {
       expect(polyglot.t('n_votes', c)).toBe(c + ' komentar');
     });
 
-    [2, 102, 202, 302].forEach(function (c) {
+    [2, 102, 202, 302].forEach((c) => {
       expect(polyglot.t('n_votes', c)).toBe(c + ' komentarja');
     });
 
-    [0, 11, 12, 13, 14, 52, 53].forEach(function (c) {
+    [0, 11, 12, 13, 14, 52, 53].forEach((c) => {
       expect(polyglot.t('n_votes', c)).toBe(c + ' komentarjev');
     });
   });
 
-  it('pluralizes in Turkish', function () {
+  it('pluralizes in Turkish', () => {
     var whatSomeoneTranslated = [
       'Sepetinizde %{smart_count} X var. Bunu almak istiyor musunuz?',
       'Sepetinizde %{smart_count} X var. Bunları almak istiyor musunuz?'
@@ -464,7 +464,7 @@ describe('locale-specific pluralization rules', function () {
     expect(polyglot.t('n_x_cart', 2)).toBe('Sepetinizde 2 X var. Bunları almak istiyor musunuz?');
   });
 
-  it('pluralizes in Lithuanian', function () {
+  it('pluralizes in Lithuanian', () => {
     var whatSomeoneTranslated = [
       '%{smart_count} balsas',
       '%{smart_count} balsai',
@@ -489,7 +489,7 @@ describe('locale-specific pluralization rules', function () {
   });
 });
 
-describe('custom pluralRules', function () {
+describe('custom pluralRules', () => {
   var customPluralRules = {
     pluralTypes: {
       germanLike: function (n) {
@@ -519,7 +519,7 @@ describe('custom pluralRules', function () {
     test_phrase: '%{smart_count} form zero |||| %{smart_count} form one'
   };
 
-  it('pluralizes in x1', function () {
+  it('pluralizes in x1', () => {
     var polyglot = new Polyglot({
       phrases: testPhrases,
       locale: 'x1',
@@ -531,7 +531,7 @@ describe('custom pluralRules', function () {
     expect(polyglot.t('test_phrase', 2)).toBe('2 form one');
   });
 
-  it('pluralizes in x2', function () {
+  it('pluralizes in x2', () => {
     var polyglot = new Polyglot({
       phrases: testPhrases,
       locale: 'x2',
@@ -544,17 +544,17 @@ describe('custom pluralRules', function () {
   });
 });
 
-describe('locale', function () {
+describe('locale', () => {
   var polyglot;
-  beforeEach(function () {
+  beforeEach(() => {
     polyglot = new Polyglot();
   });
 
-  it('defaults to "en"', function () {
+  it('defaults to "en"', () => {
     expect(polyglot.locale()).toBe('en');
   });
 
-  it('gets and sets locale', function () {
+  it('gets and sets locale', () => {
     polyglot.locale('es');
     expect(polyglot.locale()).toBe('es');
 
@@ -563,32 +563,32 @@ describe('locale', function () {
   });
 });
 
-describe('extend', function () {
+describe('extend', () => {
   var polyglot;
-  beforeEach(function () {
+  beforeEach(() => {
     polyglot = new Polyglot();
   });
 
-  it('supports multiple extends, overriding old keys', function () {
+  it('supports multiple extends, overriding old keys', () => {
     polyglot.extend({ aKey: 'First time' });
     polyglot.extend({ aKey: 'Second time' });
     expect(polyglot.t('aKey')).toBe('Second time');
   });
 
-  it('does not forget old keys', function () {
+  it('does not forget old keys', () => {
     polyglot.extend({ firstKey: 'Numba one', secondKey: 'Numba two' });
     polyglot.extend({ secondKey: 'Numero dos' });
     expect(polyglot.t('firstKey')).toBe('Numba one');
   });
 
-  it('supports optional `prefix` argument', function () {
+  it('supports optional `prefix` argument', () => {
     polyglot.extend({ click: 'Click', hover: 'Hover' }, 'sidebar');
     expect(polyglot.phrases['sidebar.click']).toBe('Click');
     expect(polyglot.phrases['sidebar.hover']).toBe('Hover');
     expect(polyglot.phrases).not.toHaveProperty('click');
   });
 
-  it('supports nested object', function () {
+  it('supports nested object', () => {
     polyglot.extend({
       sidebar: {
         click: 'Click',
@@ -609,26 +609,26 @@ describe('extend', function () {
   });
 });
 
-describe('clear', function () {
+describe('clear', () => {
   var polyglot;
-  beforeEach(function () {
+  beforeEach(() => {
     polyglot = new Polyglot();
   });
 
-  it('wipes out old phrases', function () {
+  it('wipes out old phrases', () => {
     polyglot.extend({ hiFriend: 'Hi, Friend.' });
     polyglot.clear();
     expect(polyglot.t('hiFriend')).toBe('hiFriend');
   });
 });
 
-describe('replace', function () {
+describe('replace', () => {
   var polyglot;
-  beforeEach(function () {
+  beforeEach(() => {
     polyglot = new Polyglot();
   });
 
-  it('wipes out old phrases and replace with new phrases', function () {
+  it('wipes out old phrases and replace with new phrases', () => {
     polyglot.extend({ hiFriend: 'Hi, Friend.', byeFriend: 'Bye, Friend.' });
     polyglot.replace({ hiFriend: 'Hi, Friend.' });
     expect(polyglot.t('hiFriend')).toBe('Hi, Friend.');
@@ -636,13 +636,13 @@ describe('replace', function () {
   });
 });
 
-describe('unset', function () {
+describe('unset', () => {
   var polyglot;
-  beforeEach(function () {
+  beforeEach(() => {
     polyglot = new Polyglot();
   });
 
-  it('unsets a key based on a string', function () {
+  it('unsets a key based on a string', () => {
     polyglot.extend({ test_key: 'test_value' });
     expect(polyglot.has('test_key')).toBe(true);
 
@@ -650,7 +650,7 @@ describe('unset', function () {
     expect(polyglot.has('test_key')).toBe(false);
   });
 
-  it('unsets a key based on an object hash', function () {
+  it('unsets a key based on an object hash', () => {
     polyglot.extend({ test_key: 'test_value', foo: 'bar' });
     expect(polyglot.has('test_key')).toBe(true);
     expect(polyglot.has('foo')).toBe(true);
@@ -660,7 +660,7 @@ describe('unset', function () {
     expect(polyglot.has('foo')).toBe(false);
   });
 
-  it('unsets nested objects using recursive prefix call', function () {
+  it('unsets nested objects using recursive prefix call', () => {
     polyglot.extend({ foo: { bar: 'foobar' } });
     expect(polyglot.has('foo.bar')).toBe(true);
 
@@ -669,7 +669,7 @@ describe('unset', function () {
   });
 });
 
-describe('transformPhrase', function () {
+describe('transformPhrase', () => {
   var simple = '%{name} is %{attribute}';
   var english = '%{smart_count} Name |||| %{smart_count} Names';
   var arabic = [
@@ -681,22 +681,22 @@ describe('transformPhrase', function () {
     '%{smart_count} صوت'
   ].join(' |||| ');
 
-  it('does simple interpolation', function () {
+  it('does simple interpolation', () => {
     expect(Polyglot.transformPhrase(simple, { name: 'Polyglot', attribute: 'awesome' })).toBe('Polyglot is awesome');
   });
 
-  it('removes missing keys', function () {
+  it('removes missing keys', () => {
     expect(Polyglot.transformPhrase(simple, { name: 'Polyglot' })).toBe('Polyglot is %{attribute}');
   });
 
-  it('selects the correct plural form based on smart_count', function () {
+  it('selects the correct plural form based on smart_count', () => {
     expect(Polyglot.transformPhrase(english, { smart_count: 0 }, 'en')).toBe('0 Names');
     expect(Polyglot.transformPhrase(english, { smart_count: 1 }, 'en')).toBe('1 Name');
     expect(Polyglot.transformPhrase(english, { smart_count: 2 }, 'en')).toBe('2 Names');
     expect(Polyglot.transformPhrase(english, { smart_count: 3 }, 'en')).toBe('3 Names');
   });
 
-  it('selects the correct locale', function () {
+  it('selects the correct locale', () => {
     // French rule: "0" is singular
     expect(Polyglot.transformPhrase(english, { smart_count: 0 }, 'fr')).toBe('0 Name');
     expect(Polyglot.transformPhrase(english, { smart_count: 1 }, 'fr')).toBe('1 Name');
@@ -714,30 +714,30 @@ describe('transformPhrase', function () {
     expect(Polyglot.transformPhrase(arabic, 102, 'ar')).toBe('102 صوت');
   });
 
-  it('defaults to `en`', function () {
+  it('defaults to `en`', () => {
     // French rule: "0" is singular
     expect(Polyglot.transformPhrase(english, { smart_count: 0 })).toBe('0 Names');
   });
 
-  it('ignores a region subtag when choosing a pluralization rule', function () {
+  it('ignores a region subtag when choosing a pluralization rule', () => {
     // French rule: "0" is singular
     expect(Polyglot.transformPhrase(english, { smart_count: 0 }, 'fr-FR')).toBe('0 Name');
   });
 
-  it('works without arguments', function () {
+  it('works without arguments', () => {
     expect(Polyglot.transformPhrase(english)).toBe(english);
   });
 
-  it('respects a number as shortcut for smart_count', function () {
+  it('respects a number as shortcut for smart_count', () => {
     expect(Polyglot.transformPhrase(english, 0, 'en')).toBe('0 Names');
     expect(Polyglot.transformPhrase(english, 1, 'en')).toBe('1 Name');
     expect(Polyglot.transformPhrase(english, 5, 'en')).toBe('5 Names');
   });
 
-  it('throws without sane phrase string', function () {
-    expect(function () { Polyglot.transformPhrase(); }).toThrowError(TypeError);
-    expect(function () { Polyglot.transformPhrase(null); }).toThrowError(TypeError);
-    expect(function () { Polyglot.transformPhrase(32); }).toThrowError(TypeError);
-    expect(function () { Polyglot.transformPhrase({}); }).toThrowError(TypeError);
+  it('throws without sane phrase string', () => {
+    expect(() => { Polyglot.transformPhrase(); }).toThrowError(TypeError);
+    expect(() => { Polyglot.transformPhrase(null); }).toThrowError(TypeError);
+    expect(() => { Polyglot.transformPhrase(32); }).toThrowError(TypeError);
+    expect(() => { Polyglot.transformPhrase({}); }).toThrowError(TypeError);
   });
 });
