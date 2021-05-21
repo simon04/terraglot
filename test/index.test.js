@@ -734,7 +734,9 @@ describe('transformPhrase', () => {
   });
 
   it('removes missing keys', () => {
-    expect(TerraGlot.transformPhrase(simple, { name: 'TerraGlot' })).toBe('TerraGlot is %{attribute}');
+    expect(TerraGlot.transformPhrase(simple, { name: 'TerraGlot' })).toBe(
+      'TerraGlot is %{attribute}'
+    );
   });
 
   it('selects the correct plural form based on smart_count', () => {

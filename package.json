@@ -13,7 +13,7 @@
     "pretest": "npm run --silent lint",
     "test": "jest",
     "lint": "eslint src/*.ts test/*.js",
-    "prettier": "prettier src/*.ts test/*.js",
+    "prettier": "prettier src/*.ts test/*.js *.json *.md",
     "docs": "docco -o docs/ index.js"
   },
   "repository": {

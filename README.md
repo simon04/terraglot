@@ -1,9 +1,8 @@
-TerraGlot
-=========
+# TerraGlot
 
 A tiny i18n helper library
 
-This is a modern fork of [airbnb/polyglot.js](https://github.com/airbnb/polyglot.js) – Polyglot.js is a tiny I18n helper library written in JavaScript, made to work both in the browser and in CommonJS environments (Node). It provides a simple solution for interpolation and pluralization, based off of Airbnb’s experience adding I18n functionality to its Backbone.js and Node apps. 
+This is a modern fork of [airbnb/polyglot.js](https://github.com/airbnb/polyglot.js) – Polyglot.js is a tiny I18n helper library written in JavaScript, made to work both in the browser and in CommonJS environments (Node). It provides a simple solution for interpolation and pluralization, based off of Airbnb’s experience adding I18n functionality to its Backbone.js and Node apps.
 
 I18n is incredibly important for us at [Airbnb](https://www.airbnb.com/), as we have listings in 192 countries, and we translate our site into 30-odd different languages.
 We’re also [hiring talented engineers](https://www.airbnb.com/jobs/departments/engineering) to help us scale up to meet the challenges of building a global marketplace.
@@ -56,7 +55,7 @@ terraglot.t("hello");
 You can also pass a mapping at instantiation, using the key `phrases`:
 
 ```js
-var terraglot = new TerraGlot({phrases: {"hello": "Hello"}});
+var terraglot = new TerraGlot({ phrases: { hello: 'Hello' } });
 ```
 
 TerraGlot doesn’t do the translation for you. It’s up to you to give it
@@ -145,7 +144,7 @@ terraglot.locale()
 You can also pass this in during instantiation.
 
 ```js
-var terraglot = new TerraGlot({locale: "fr"});
+var terraglot = new TerraGlot({ locale: 'fr' });
 ```
 
 Currently, the _only_ thing that TerraGlot uses this locale setting for is pluralization.
@@ -158,9 +157,10 @@ For pluralizing "car" in English, TerraGlot assumes you have a phrase of the for
 
 ```js
 terraglot.extend({
-  "num_cars": "%{smart_count} car |||| %{smart_count} cars",
+  num_cars: '%{smart_count} car |||| %{smart_count} cars'
 });
 ```
+
 Please keep in mind that `smart_count` is required. No other option name is taken into account to transform pluralization strings.
 
 In English (and German, Spanish, Italian, and a few others) there are only two plural forms: singular and not-singular.
@@ -168,10 +168,10 @@ In English (and German, Spanish, Italian, and a few others) there are only two p
 Some languages get a bit more complicated. In Czech, there are three separate forms: 1, 2 through 4, and 5 and up. Russian is even more involved.
 
 ```js
-var terraglot = new TerraGlot({locale: "cs"}); // Czech
+var terraglot = new TerraGlot({ locale: 'cs' }); // Czech
 terraglot.extend({
-  "num_foxes": "Mám %{smart_count} lišku |||| Mám %{smart_count} lišky |||| Mám %{smart_count} lišek"
-})
+  num_foxes: 'Mám %{smart_count} lišku |||| Mám %{smart_count} lišky |||| Mám %{smart_count} lišek'
+});
 ```
 
 `terraglot.t()` will choose the appropriate phrase based on the provided `smart_count` option, whose value is a number.
@@ -258,7 +258,7 @@ terraglot.t("car", 2);
 ```
 
 If you like, you can provide a default value in case the phrase is missing.
-Use the special option key "_" to specify a default.
+Use the special option key "\_" to specify a default.
 
 ```js
 terraglot.t("i_like_to_write_in_language", {
@@ -274,18 +274,20 @@ Use `extend` to tell TerraGlot how to translate a given key.
 
 ```js
 terraglot.extend({
-  "hello": "Hello",
-  "hello_name": "Hello, %{name}"
+  hello: 'Hello',
+  hello_name: 'Hello, %{name}'
 });
 ```
 
 The key can be any string. Feel free to call `extend` multiple times; it will override any phrases with the same key, but leave existing phrases untouched.
 
 ### TerraGlot.prototype.unset(keyOrObject)
+
 Use `unset` to selectively remove keys from a TerraPlot instance.
 `unset` accepts one argument: either a single string key, or an object whose keys are string keys, and whose values are ignored unless they are nested objects (in the same format).
 
 Example:
+
 ```js
 terraglot.unset('some_key');
 terraglot.unset({
@@ -306,7 +308,6 @@ If a truthy value is provided, it will set the locale. Afterwards, it will retur
 
 Clears all phrases. Useful for special cases, such as freeing up memory if you have lots of phrases but no longer need to perform any translation. Also used internally by `replace`.
 
-
 ### TerraGlot.prototype.replace(phrases)
 
 Completely replace the existing phrases with a new set of phrases.
@@ -326,15 +327,15 @@ You can pass in a number instead of an Object as `substitutions` as a shortcut f
 You should pass in a third argument, the locale, to specify the correct plural type. It defaults to `'en'` which has 2 plural forms.
 
 ## Options Overview
+
 `new TerraGlot` accepts a number of options:
 
- - `phrases`: a key/value map of translated phrases. See [Translation](#translation).
- - `locale`: a string describing the locale (language and region) of the translation, to apply pluralization rules. see [Pluralization](#pluralization)
- - `allowMissing`: a boolean to control whether missing keys in a `t` call are allowed. If `false`, by default, a missing key is returned and a warning is issued.
- - `onMissingKey`: if `allowMissing` is `true`, and this option is a function, then it will be called instead of the default functionality. Arguments passed to it are `key`, `options`, and `locale`. The return of this function will be used as a translation fallback when `terraglot.t('missing.key')` is called (hint: return the key).
- - `interpolation`: an object to change the substitution syntax for interpolation by setting the `prefix` and `suffix` fields.
- - `pluralRules`: an object of `pluralTypes` and `pluralTypeToLanguages` to control pluralization logic.
-
+- `phrases`: a key/value map of translated phrases. See [Translation](#translation).
+- `locale`: a string describing the locale (language and region) of the translation, to apply pluralization rules. see [Pluralization](#pluralization)
+- `allowMissing`: a boolean to control whether missing keys in a `t` call are allowed. If `false`, by default, a missing key is returned and a warning is issued.
+- `onMissingKey`: if `allowMissing` is `true`, and this option is a function, then it will be called instead of the default functionality. Arguments passed to it are `key`, `options`, and `locale`. The return of this function will be used as a translation fallback when `terraglot.t('missing.key')` is called (hint: return the key).
+- `interpolation`: an object to change the substitution syntax for interpolation by setting the `prefix` and `suffix` fields.
+- `pluralRules`: an object of `pluralTypes` and `pluralTypeToLanguages` to control pluralization logic.
 
 ## [History](CHANGELOG.md)
 
