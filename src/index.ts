@@ -180,7 +180,7 @@ function transformPhrase(
   pluralRules?: PluralRules
 ): string {
   if (typeof phrase !== 'string') {
-    throw new TypeError('Polyglot.transformPhrase expects argument #1 to be string');
+    throw new TypeError('TerraGlot.transformPhrase expects argument #1 to be string');
   }
 
   if (substitutions == null) {
@@ -216,7 +216,7 @@ function transformPhrase(
   return result;
 }
 
-interface PolyglotOptions {
+interface TerraGlotOptions {
   phrases: Phrases;
   locale: Language;
   allowMissing: boolean;
@@ -229,8 +229,7 @@ interface PolyglotOptions {
   warn: (message: string) => void;
 }
 
-// ### Polyglot class constructor
-export default class Polyglot {
+export default class TerraGlot {
   phrases: Phrases;
   currentLocale: Language;
   onMissingKey: typeof transformPhrase;
@@ -238,7 +237,8 @@ export default class Polyglot {
   tokenRegex: RegExp;
   pluralRules: PluralRules;
 
-  constructor(options: Partial<PolyglotOptions>) {
+  // ### TerraGlot class constructor
+  constructor(options: Partial<TerraGlotOptions>) {
     const opts = options || {};
     this.phrases = {};
     this.extend(opts.phrases || {});
@@ -250,19 +250,19 @@ export default class Polyglot {
     this.pluralRules = opts.pluralRules || defaultPluralRules;
   }
 
-  // ### polyglot.locale([locale])
+  // ### terraglot.locale([locale])
   //
-  // Get or set locale. Internally, Polyglot only uses locale for pluralization.
+  // Get or set locale. Internally, TerraGlot only uses locale for pluralization.
   locale(newLocale: Language): Language {
     if (newLocale) this.currentLocale = newLocale;
     return this.currentLocale;
   }
 
-  // ### polyglot.extend(phrases)
+  // ### terraglot.extend(phrases)
   //
-  // Use `extend` to tell Polyglot how to translate a given key.
+  // Use `extend` to tell TerraGlot how to translate a given key.
   //
-  //     polyglot.extend({
+  //     terraglot.extend({
   //       "hello": "Hello",
   //       "hello_name": "Hello, %{name}"
   //     });
@@ -274,7 +274,7 @@ export default class Polyglot {
   // It is also possible to pass nested phrase objects, which get flattened
   // into an object with the nested keys concatenated using dot notation.
   //
-  //     polyglot.extend({
+  //     terraglot.extend({
   //       "nav": {
   //         "hello": "Hello",
   //         "hello_name": "Hello, %{name}",
@@ -284,7 +284,7 @@ export default class Polyglot {
   //       }
   //     });
   //
-  //     console.log(polyglot.phrases);
+  //     console.log(terraglot.phrases);
   //     // {
   //     //   'nav.hello': 'Hello',
   //     //   'nav.hello_name': 'Hello, %{name}',
@@ -295,12 +295,12 @@ export default class Polyglot {
   // to prefix every key in the phrases object with some string, using dot
   // notation.
   //
-  //     polyglot.extend({
+  //     terraglot.extend({
   //       "hello": "Hello",
   //       "hello_name": "Hello, %{name}"
   //     }, "nav");
   //
-  //     console.log(polyglot.phrases);
+  //     console.log(terraglot.phrases);
   //     // {
   //     //   'nav.hello': 'Hello',
   //     //   'nav.hello_name': 'Hello, %{name}'
@@ -319,11 +319,11 @@ export default class Polyglot {
     });
   }
 
-  // ### polyglot.unset(phrases)
-  // Use `unset` to selectively remove keys from a polyglot instance.
+  // ### terraglot.unset(phrases)
+  // Use `unset` to selectively remove keys from a TerraGlot instance.
   //
-  //     polyglot.unset("some_key");
-  //     polyglot.unset({
+  //     terraglot.unset("some_key");
+  //     terraglot.unset({
   //       "hello": "Hello",
   //       "hello_name": "Hello, %{name}"
   //     });
@@ -346,7 +346,7 @@ export default class Polyglot {
     }
   }
 
-  // ### polyglot.clear()
+  // ### terraglot.clear()
   //
   // Clears all phrases. Useful for special cases, such as freeing
   // up memory if you have lots of phrases but no longer need to
@@ -355,7 +355,7 @@ export default class Polyglot {
     this.phrases = {};
   }
 
-  // ### polyglot.replace(phrases)
+  // ### terraglot.replace(phrases)
   //
   // Completely replace the existing phrases with a new set of phrases.
   // Normally, just use `extend` to add more phrases, but under certain
@@ -365,26 +365,26 @@ export default class Polyglot {
     this.extend(newPhrases);
   }
 
-  // ### polyglot.t(key, options)
+  // ### terraglot.t(key, options)
   //
   // The most-used method. Provide a key, and `t` will return the
   // phrase.
   //
-  //     polyglot.t("hello");
+  //     terraglot.t("hello");
   //     => "Hello"
   //
-  // The phrase value is provided first by a call to `polyglot.extend()` or
-  // `polyglot.replace()`.
+  // The phrase value is provided first by a call to `terraglot.extend()` or
+  // `terraglot.replace()`.
   //
   // Pass in an object as the second argument to perform interpolation.
   //
-  //     polyglot.t("hello_name", {name: "Spike"});
+  //     terraglot.t("hello_name", {name: "Spike"});
   //     => "Hello, Spike"
   //
   // If you like, you can provide a default value in case the phrase is missing.
   // Use the special option key "_" to specify a default.
   //
-  //     polyglot.t("i_like_to_write_in_language", {
+  //     terraglot.t("i_like_to_write_in_language", {
   //       _: "I like to write in %{language}.",
   //       language: "JavaScript"
   //     });
@@ -410,7 +410,7 @@ export default class Polyglot {
     return result;
   }
 
-  // ### polyglot.has(key)
+  // ### terraglot.has(key)
   //
   // Check if polyglot has a translation for given key
   has(key: string): boolean {
