@@ -1,7 +1,6 @@
 'use strict';
 
 var Polyglot = require('../');
-var expect = require('chai').expect;
 var forEach = require('for-each');
 
 describe('t', function () {
