@@ -1,3 +1,8 @@
+### v3.0.0: May 21, 2021
+
+- TerraGlot is a modern fork of airbnb/polyglot.js
+- Migrate to TypeScript
+
 ### v2.4.0: September 10, 2019
 
 - [New] add ability to configure pluralization rules (#138)

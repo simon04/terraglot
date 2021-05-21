@@ -4,6 +4,7 @@
 node_modules
 dist/
 *.sw?
+*.tgz
 
 # Only apps should have lockfiles
 npm-shrinkwrap.json
