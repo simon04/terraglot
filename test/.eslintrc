@@ -1,8 +1,4 @@
 {
-  "rules": {
-    "max-len": 0,
-  },
-
   "env": {
     "jest": true,
   },
