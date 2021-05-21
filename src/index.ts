@@ -114,7 +114,7 @@ function pluralTypeName(pluralRules, locale) {
   var langToPluralType = langToTypeMap(pluralRules.pluralTypeToLanguages);
   return langToPluralType[locale]
     || langToPluralType[split.call(locale, /-/, 1)[0]]
-    || langToPluralType.en;
+    || langToPluralType['en'];
 }
 
 function pluralTypeIndex(pluralRules, locale, count) {
@@ -379,7 +379,7 @@ Polyglot.prototype.has = function (key) {
 
 // export transformPhrase
 Polyglot.transformPhrase = function transform(phrase, substitutions, locale) {
-  return transformPhrase(phrase, substitutions, locale);
+  return transformPhrase(phrase, substitutions, locale, undefined, undefined);
 };
 
 module.exports = Polyglot;

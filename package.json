@@ -3,7 +3,7 @@
   "version": "2.4.0",
   "description": "Give your JavaScript the ability to speak many languages known on Earth.",
   "homepage": "https://github.com/simon04/terraglot",
-  "source": "index.js",
+  "source": "./src/index.ts",
   "exports": "./dist/terraglot.modern.js",
   "main": "./dist/terraglot.cjs",
   "module": "./dist/terraglot.module.js",
@@ -12,7 +12,7 @@
     "build": "microbundle",
     "pretest": "npm run --silent lint",
     "test": "jest",
-    "lint": "eslint *.js test/*.js",
+    "lint": "eslint src/*.ts test/*.js",
     "docs": "docco -o docs/ index.js"
   },
   "repository": {
@@ -30,12 +30,17 @@
     "polyglot"
   ],
   "author": "Spike Brehm <spike@airbnb.com>",
-  "contributors": ["Simon Legner <Simon.Legner@gmail.com"],
+  "contributors": [
+    "Simon Legner <Simon.Legner@gmail.com"
+  ],
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
     "docco": "^0.7.0",
     "eslint": "^7.26.0",
     "jest": "^26.6.3",
-    "microbundle": "^0.13.0"
+    "microbundle": "^0.13.0",
+    "typescript": "^4.2.4"
   },
   "license": "BSD-2-Clause"
 }
