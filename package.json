@@ -33,8 +33,7 @@
   "contributors": ["Simon Legner <Simon.Legner@gmail.com"],
   "dependencies": {
     "for-each": "^0.3.3",
-    "has": "^1.0.3",
-    "warning": "^4.0.3"
+    "has": "^1.0.3"
   },
   "devDependencies": {
     "docco": "^0.7.0",

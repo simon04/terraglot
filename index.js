@@ -18,12 +18,7 @@
 'use strict';
 
 var forEach = require('for-each');
-var warning = require('warning');
 var has = require('has');
-
-var warn = function warn(message) {
-  warning(false, message);
-};
 
 var replace = String.prototype.replace;
 var split = String.prototype.split;
@@ -213,7 +208,7 @@ function Polyglot(options) {
   this.currentLocale = opts.locale || 'en';
   var allowMissing = opts.allowMissing ? transformPhrase : null;
   this.onMissingKey = typeof opts.onMissingKey === 'function' ? opts.onMissingKey : allowMissing;
-  this.warn = opts.warn || warn;
+  this.warn = opts.warn || console.warn;
   this.tokenRegex = constructTokenRegex(opts.interpolation);
   this.pluralRules = opts.pluralRules || defaultPluralRules;
 }
