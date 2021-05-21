@@ -1,10 +1,13 @@
-//     (c) 2012-2018 Airbnb, Inc.
+//     (c) 2012-2021 Airbnb, Inc.
+//     (c) 2021 Simon Legner
 //
-//     polyglot.js may be freely distributed under the terms of the BSD
+//     TerraGlot may be freely distributed under the terms of the BSD
 //     license. For all licensing information, details, and documentation:
-//     http://airbnb.github.com/polyglot.js
+//     https://github.com/simon04/terraglot/blob/master/LICENSE
 //
+// TerraGlot is a a tiny i18n helper library.
 //
+// This is a modern fork of [airbnb/polyglot.js](https://github.com/airbnb/polyglot.js)
 // Polyglot.js is an I18n helper library written in JavaScript, made to
 // work both in the browser and in Node. It provides a simple solution for
 // interpolation and pluralization, based off of Airbnb's
