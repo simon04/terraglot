@@ -3,9 +3,13 @@
   "version": "2.4.0",
   "description": "Give your JavaScript the ability to speak many languages known on Earth.",
   "homepage": "https://github.com/simon04/terraglot",
-  "main": "index.js",
+  "source": "index.js",
+  "exports": "./dist/terraglot.modern.js",
+  "main": "./dist/terraglot.cjs",
+  "module": "./dist/terraglot.module.js",
+  "unpkg": "./dist/terraglot.umd.js",
   "scripts": {
-    "prepublish": "safe-publish-latest",
+    "build": "microbundle",
     "pretest": "npm run --silent lint",
     "test": "jest",
     "lint": "eslint *.js test/*.js",
@@ -37,8 +41,7 @@
     "docco": "^0.7.0",
     "eslint": "^7.26.0",
     "jest": "^26.6.3",
-    "safe-publish-latest": "^1.1.4",
-    "uglify-js": "^2.7.3"
+    "microbundle": "^0.13.0"
   },
   "license": "BSD-2-Clause"
 }
