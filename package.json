@@ -1,7 +1,8 @@
 {
-  "name": "node-polyglot",
+  "name": "terraglot",
   "version": "2.4.0",
-  "description": "Give your JavaScript the ability to speak many languages.",
+  "description": "Give your JavaScript the ability to speak many languages known on Earth.",
+  "homepage": "https://github.com/simon04/terraglot",
   "main": "index.js",
   "scripts": {
     "prepublish": "safe-publish-latest",
@@ -13,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/airbnb/polyglot.js.git"
+    "url": "git://github.com/simon04/terraglot.git"
   },
   "keywords": [
     "i18n",
@@ -22,9 +23,11 @@
     "translation",
     "interpolation",
     "translate",
+    "terraglot",
     "polyglot"
   ],
   "author": "Spike Brehm <spike@airbnb.com>",
+  "contributors": ["Simon Legner <Simon.Legner@gmail.com"],
   "dependencies": {
     "for-each": "^0.3.3",
     "has": "^1.0.3",

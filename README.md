@@ -1,20 +1,18 @@
-Polyglot.js
-===========
+TerraGlot
+=========
 
-[![Build Status][travis-image]][travis-url]
+A tiny i18n helper library
 
-[![Join the chat at https://gitter.im/airbnb/polyglot.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/airbnb/polyglot.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-Polyglot.js is a tiny I18n helper library written in JavaScript, made to work both in the browser and in CommonJS environments (Node). It provides a simple solution for interpolation and pluralization, based off of Airbnb’s experience adding I18n functionality to its Backbone.js and Node apps. 
+This is a modern fork of [airbnb/polyglot.js](https://github.com/airbnb/polyglot.js) – Polyglot.js is a tiny I18n helper library written in JavaScript, made to work both in the browser and in CommonJS environments (Node). It provides a simple solution for interpolation and pluralization, based off of Airbnb’s experience adding I18n functionality to its Backbone.js and Node apps. 
 
 I18n is incredibly important for us at [Airbnb](https://www.airbnb.com/), as we have listings in 192 countries, and we translate our site into 30-odd different languages.
 We’re also [hiring talented engineers](https://www.airbnb.com/jobs/departments/engineering) to help us scale up to meet the challenges of buliding a global marketplace.
 
-View the [documentation on Github](https://github.com/airbnb/polyglot.js).
+<!-- View the [documentation on Github](https://github.com/airbnb/polyglot.js). -->
 
-View the [annotated source](https://airbnb.io/polyglot.js/polyglot.html).
+<!-- View the [annotated source](https://airbnb.io/polyglot.js/polyglot.html). -->
 
-Polylglot is agnostic to your translation backend. It doesn’t perform any translation; it simply gives you a way to manage translated phrases from your client- or server-side JavaScript application.
+TerraGlot is agnostic to your translation backend. It doesn’t perform any translation; it simply gives you a way to manage translated phrases from your client- or server-side JavaScript application.
 
 ## Installation
 
@@ -237,7 +235,7 @@ This can be useful to support locales that polyglot does not support by default 
 
 The most-used method. Provide a key, and `t()` will return the phrase.
 
-```
+```js
 polyglot.t("hello");
 => "Hello"
 ```
@@ -246,7 +244,7 @@ The phrase value is provided first by a call to `polyglot.extend()` or `polyglot
 
 Pass in an object as the second argument to perform interpolation.
 
-```
+```js
 polyglot.t("hello_name", {name: "Spike"});
 => "Hello, Spike"
 ```
@@ -330,7 +328,7 @@ You should pass in a third argument, the locale, to specify the correct plural t
 ## Options Overview
 `new Polyglot` accepts a number of options:
 
- - `phrases`: a key/value map of translated phrases. See [Translation](https://github.com/airbnb/polyglot.js#translation).
+ - `phrases`: a key/value map of translated phrases. See [Translation](#translation).
  - `locale`: a string describing the locale (language and region) of the translation, to apply pluralization rules. see [Pluralization](#pluralization)
  - `allowMissing`: a boolean to control whether missing keys in a `t` call are allowed. If `false`, by default, a missing key is returned and a warning is issued.
  - `onMissingKey`: if `allowMissing` is `true`, and this option is a function, then it will be called instead of the default functionality. Arguments passed to it are `key`, `options`, and `locale`. The return of this function will be used as a translation fallback when `polyglot.t('missing.key')` is called (hint: return the key).
@@ -340,9 +338,7 @@ You should pass in a third argument, the locale, to specify the correct plural t
 
 ## [History](CHANGELOG.md)
 
-[travis-image]: https://travis-ci.org/airbnb/polyglot.js.svg
-[travis-url]: https://travis-ci.org/airbnb/polyglot.js
-
 ## Related projects
 
+- [polyglot.js](https://github.com/airbnb/polyglot.js): The roots of this project
 - [i18n-extract](https://github.com/oliviertassinari/i18n-extract): Manage localization with static analysis. (E.g. key usage extraction)
