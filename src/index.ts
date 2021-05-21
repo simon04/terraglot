@@ -31,7 +31,7 @@ interface PluralRules {
   pluralTypeToLanguages: Record<PluralType, Language[]>;
 }
 
-const russianPluralGroups =  (n: number) => {
+const russianPluralGroups = (n: number): number => {
   const lastTwo = n % 100;
   const end = lastTwo % 10;
   if (lastTwo !== 11 && end === 1) {
@@ -117,22 +117,22 @@ function langToTypeMap(mapping: Record<string, string[]>): Record<Language, Plur
   return ret;
 }
 
-function pluralTypeName(pluralRules: PluralRules, locale: Language) {
+function pluralTypeName(pluralRules: PluralRules, locale: Language): string {
   const langToPluralType = langToTypeMap(pluralRules.pluralTypeToLanguages);
   return langToPluralType[locale]
     || langToPluralType[locale.split(/-/, 1)[0]]
     || langToPluralType['en'];
 }
 
-function pluralTypeIndex(pluralRules:PluralRules, locale: Language, count:number) {
+function pluralTypeIndex(pluralRules:PluralRules, locale: Language, count:number): number {
   return pluralRules.pluralTypes[pluralTypeName(pluralRules, locale)](count);
 }
 
-function escape(token: string) {
+function escape(token: string): string {
   return token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function constructTokenRegex(opts: {prefix: string; suffix: string;}) {
+function constructTokenRegex(opts: {prefix: string; suffix: string;}): RegExp {
   const prefix = (opts && opts.prefix) || '%{';
   const suffix = (opts && opts.suffix) || '}';
 
