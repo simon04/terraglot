@@ -168,7 +168,7 @@ const defaultTokenRegex = /%\{(.*?)\}/g;
 //
 // You should pass in a third argument, the locale, to specify the correct plural type.
 // It defaults to `'en'` with 2 plural forms.
-function transformPhrase(phrase: string, substitutions: Substitutions, locale: string, tokenRegex: RegExp, pluralRules: PluralRules) {
+function transformPhrase(phrase: string, substitutions: Substitutions, locale: string, tokenRegex?: RegExp, pluralRules?: PluralRules): string {
   if (typeof phrase !== 'string') {
     throw new TypeError('Polyglot.transformPhrase expects argument #1 to be string');
   }
@@ -216,7 +216,15 @@ interface PolyglotOptions {
 }
 
 // ### Polyglot class constructor
-function Polyglot(options: Partial<PolyglotOptions>) {
+export default class Polyglot {
+phrases: Phrases;
+currentLocale: Language;
+onMissingKey: typeof transformPhrase;
+warn: (message: string) => void;
+tokenRegex: RegExp;
+pluralRules: PluralRules;
+
+constructor(options: Partial<PolyglotOptions>) {
   const opts = options || {};
   this.phrases = {};
   this.extend(opts.phrases || {});
@@ -231,10 +239,10 @@ function Polyglot(options: Partial<PolyglotOptions>) {
 // ### polyglot.locale([locale])
 //
 // Get or set locale. Internally, Polyglot only uses locale for pluralization.
-Polyglot.prototype.locale = function (newLocale: Language) {
+locale(newLocale: Language): Language {
   if (newLocale) this.currentLocale = newLocale;
   return this.currentLocale;
-};
+}
 
 // ### polyglot.extend(phrases)
 //
@@ -285,7 +293,7 @@ Polyglot.prototype.locale = function (newLocale: Language) {
 //     // }
 //
 // This feature is used internally to support nested phrase objects.
-Polyglot.prototype.extend = function (morePhrases: Phrases, prefix?: string) {
+extend(morePhrases: Phrases, prefix?: string): void {
   Object.keys(morePhrases).forEach( (key) => {
     const phrase = morePhrases[key];
     const prefixedKey = prefix ? prefix + '.' + key : key;
@@ -295,7 +303,7 @@ Polyglot.prototype.extend = function (morePhrases: Phrases, prefix?: string) {
       this.phrases[prefixedKey] = phrase;
     }
   });
-};
+}
 
 // ### polyglot.unset(phrases)
 // Use `unset` to selectively remove keys from a polyglot instance.
@@ -308,7 +316,7 @@ Polyglot.prototype.extend = function (morePhrases: Phrases, prefix?: string) {
 //
 // The unset method can take either a string (for the key), or an object hash with
 // the keys that you would like to unset.
-Polyglot.prototype.unset = function (morePhrases: Phrases, prefix?: string) {
+unset(morePhrases: Phrases, prefix?: string): void {
   if (typeof morePhrases === 'string') {
     delete this.phrases[morePhrases];
   } else {
@@ -322,26 +330,26 @@ Polyglot.prototype.unset = function (morePhrases: Phrases, prefix?: string) {
       }
     });
   }
-};
+}
 
 // ### polyglot.clear()
 //
 // Clears all phrases. Useful for special cases, such as freeing
 // up memory if you have lots of phrases but no longer need to
 // perform any translation. Also used internally by `replace`.
-Polyglot.prototype.clear = function () {
+clear(): void {
   this.phrases = {};
-};
+}
 
 // ### polyglot.replace(phrases)
 //
 // Completely replace the existing phrases with a new set of phrases.
 // Normally, just use `extend` to add more phrases, but under certain
 // circumstances, you may want to make sure no old phrases are lying around.
-Polyglot.prototype.replace = function (newPhrases: Phrases) {
+replace(newPhrases: Phrases): void {
   this.clear();
   this.extend(newPhrases);
-};
+}
 
 // ### polyglot.t(key, options)
 //
@@ -368,7 +376,7 @@ Polyglot.prototype.replace = function (newPhrases: Phrases) {
 //     });
 //     => "I like to write in JavaScript."
 //
-Polyglot.prototype.t = function (key: string, options: Substitutions) {
+t(key: string, options: Substitutions): string {
   let phrase, result;
   const opts = options == null ? {} : options;
   if (typeof this.phrases[key] === 'string') {
@@ -386,18 +394,18 @@ Polyglot.prototype.t = function (key: string, options: Substitutions) {
     result = transformPhrase(phrase, opts, this.currentLocale, this.tokenRegex, this.pluralRules);
   }
   return result;
-};
+}
 
 // ### polyglot.has(key)
 //
 // Check if polyglot has a translation for given key
-Polyglot.prototype.has = function (key: string) {
+has(key: string): boolean {
   return this.phrases[key] !== undefined;
-};
+}
 
 // export transformPhrase
-Polyglot.transformPhrase = function transform(phrase: string, substitutions: Substitutions, locale: Language) {
-  return transformPhrase(phrase, substitutions, locale, undefined, undefined);
-};
+static transformPhrase(phrase: string, substitutions: Substitutions, locale: string, tokenRegex?: RegExp, pluralRules?: PluralRules): string {
+  return transformPhrase(phrase, substitutions, locale, tokenRegex, pluralRules);
+}
 
-module.exports = Polyglot;
+}
