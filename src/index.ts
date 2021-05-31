@@ -22,7 +22,7 @@
 // The string that separates the different phrase possibilities.
 const delimiter = '||||';
 
-type Phrases = Record<string, string>;
+type Phrases = Record<string, string | Record<string, string>>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Substitutions = number | Record<string, any>;
 type Language = string;
@@ -238,8 +238,7 @@ export default class TerraGlot {
   pluralRules: PluralRules;
 
   // ### TerraGlot class constructor
-  constructor(options: Partial<TerraGlotOptions>) {
-    const opts = options || {};
+  constructor(opts: Partial<TerraGlotOptions> = {}) {
     this.phrases = {};
     this.extend(opts.phrases || {});
     this.currentLocale = opts.locale || 'en';
@@ -253,7 +252,7 @@ export default class TerraGlot {
   // ### terraglot.locale([locale])
   //
   // Get or set locale. Internally, TerraGlot only uses locale for pluralization.
-  locale(newLocale: Language): Language {
+  locale(newLocale?: Language): Language {
     if (newLocale) this.currentLocale = newLocale;
     return this.currentLocale;
   }
@@ -390,9 +389,8 @@ export default class TerraGlot {
   //     });
   //     => "I like to write in JavaScript."
   //
-  t(key: string, options: Substitutions): string {
+  t(key: string, opts: Substitutions = {}): string {
     let phrase, result;
-    const opts = options == null ? {} : options;
     if (typeof this.phrases[key] === 'string') {
       phrase = this.phrases[key];
     } else if (typeof opts === 'object' && typeof opts._ === 'string') {
