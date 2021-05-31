@@ -1,3 +1,8 @@
+### v3.0.1: May 31, 2021
+
+- Specify TypeScript declaration file
+- TypeScript: fix/improve types
+
 ### v3.0.0: May 21, 2021
 
 - TerraGlot is a modern fork of airbnb/polyglot.js
