@@ -3,12 +3,15 @@
   "version": "3.0.1",
   "description": "Give your JavaScript the ability to speak many languages known on Earth.",
   "homepage": "https://github.com/simon04/terraglot",
+  "type": "module",
   "source": "./src/index.ts",
-  "exports": "./dist/terraglot.modern.js",
+  "exports": {
+    "require": "./dist/terraglot.cjs",
+    "default": "./dist/terraglot.modern.js"
+  },
   "main": "./dist/terraglot.cjs",
   "module": "./dist/terraglot.module.js",
   "unpkg": "./dist/terraglot.umd.js",
-  "types": "./dist/index.d.ts",
   "scripts": {
     "prepublish": "npm run build",
     "build": "microbundle --no-compress",
