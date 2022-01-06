@@ -11,7 +11,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "microbundle",
+    "build": "microbundle --no-compress",
     "pretest": "npm run --silent lint",
     "test": "jest",
     "lint": "eslint src/*.ts test/*.js",
