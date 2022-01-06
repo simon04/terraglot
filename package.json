@@ -10,6 +10,7 @@
   "unpkg": "./dist/terraglot.umd.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "prepublish": "npm run build",
     "build": "microbundle",
     "pretest": "npm run --silent lint",
     "test": "jest",
