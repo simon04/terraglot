@@ -1,5 +1,5 @@
 //     (c) 2012-2021 Airbnb, Inc.
-//     (c) 2021 Simon Legner
+//     (c) 2021-2022 Simon Legner
 //
 //     TerraGlot may be freely distributed under the terms of the BSD
 //     license. For all licensing information, details, and documentation:
