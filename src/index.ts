@@ -136,9 +136,9 @@ function escape(token: string): string {
   return token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function constructTokenRegex(opts: { prefix: string; suffix: string }): RegExp {
-  const prefix = (opts && opts.prefix) || '%{';
-  const suffix = (opts && opts.suffix) || '}';
+function constructTokenRegex(opts?: { prefix: string; suffix: string }): RegExp {
+  const prefix = opts?.prefix || '%{';
+  const suffix = opts?.suffix || '}';
 
   if (prefix === delimiter || suffix === delimiter) {
     throw new RangeError('"' + delimiter + '" token is reserved for pluralization');
@@ -232,7 +232,7 @@ interface TerraGlotOptions {
 export default class TerraGlot {
   phrases: Phrases;
   currentLocale: Language;
-  onMissingKey: typeof transformPhrase;
+  onMissingKey?: typeof transformPhrase;
   warn: (message: string) => void;
   tokenRegex: RegExp;
   pluralRules: PluralRules;
@@ -242,7 +242,7 @@ export default class TerraGlot {
     this.phrases = {};
     this.extend(opts.phrases || {});
     this.currentLocale = opts.locale || 'en';
-    const allowMissing = opts.allowMissing ? transformPhrase : null;
+    const allowMissing = opts.allowMissing ? transformPhrase : undefined;
     this.onMissingKey = typeof opts.onMissingKey === 'function' ? opts.onMissingKey : allowMissing;
     this.warn = opts.warn || console.warn;
     this.tokenRegex = constructTokenRegex(opts.interpolation);
@@ -390,22 +390,17 @@ export default class TerraGlot {
   //     => "I like to write in JavaScript."
   //
   t(key: string, opts: Substitutions = {}): string {
-    let phrase, result;
-    if (typeof this.phrases[key] === 'string') {
-      phrase = this.phrases[key];
+    const phrase = this.phrases[key];
+    if (typeof phrase === 'string') {
+      return transformPhrase(phrase, opts, this.currentLocale, this.tokenRegex, this.pluralRules);
     } else if (typeof opts === 'object' && typeof opts._ === 'string') {
-      phrase = opts._;
+      return transformPhrase(opts._, opts, this.currentLocale, this.tokenRegex, this.pluralRules);
     } else if (this.onMissingKey) {
-      const onMissingKey: typeof transformPhrase = this.onMissingKey;
-      result = onMissingKey(key, opts, this.currentLocale, this.tokenRegex, this.pluralRules);
+      return this.onMissingKey(key, opts, this.currentLocale, this.tokenRegex, this.pluralRules);
     } else {
       this.warn('Missing translation for key: "' + key + '"');
-      result = key;
+      return key;
     }
-    if (typeof phrase === 'string') {
-      result = transformPhrase(phrase, opts, this.currentLocale, this.tokenRegex, this.pluralRules);
-    }
-    return result;
   }
 
   // ### terraglot.has(key)

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES5",
-    "noImplicitAny": true
+    "strict": true
   },
   "exclude": ["dist/**"]
 }
