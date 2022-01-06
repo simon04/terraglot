@@ -1,3 +1,9 @@
+### v3.1.0: January 6, 2022
+
+- Build ES Module package
+- No not compress output using Terser
+- TypeScript: strict
+
 ### v3.0.1: May 31, 2021
 
 - Specify TypeScript declaration file

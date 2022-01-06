@@ -1,6 +1,6 @@
 {
   "name": "terraglot",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Give your JavaScript the ability to speak many languages known on Earth.",
   "homepage": "https://github.com/simon04/terraglot",
   "type": "module",
