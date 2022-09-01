@@ -1,6 +1,6 @@
-'use strict';
+import { beforeEach, describe, it, expect } from 'vitest';
 
-var TerraGlot = require('../');
+import TerraGlot from '../';
 
 describe('t', () => {
   var phrases = {
@@ -178,18 +178,19 @@ describe('t', () => {
       expect(result).toBe(returnValue);
     });
 
-    it('overrides allowMissing', (done) => {
-      var missingKey = 'missing key';
-      var onMissingKey = function (key) {
-        expect(key).toBe(missingKey);
-        done();
-      };
-      var instance = new TerraGlot({
-        onMissingKey: onMissingKey,
-        allowMissing: true
-      });
-      instance.t(missingKey);
-    });
+    it('overrides allowMissing', () =>
+      new Promise((resolve) => {
+        var missingKey = 'missing key';
+        var onMissingKey = function (key) {
+          expect(key).toBe(missingKey);
+          resolve();
+        };
+        var instance = new TerraGlot({
+          onMissingKey: onMissingKey,
+          allowMissing: true
+        });
+        instance.t(missingKey);
+      }));
   });
 });
 
