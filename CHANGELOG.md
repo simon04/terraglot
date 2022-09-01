@@ -1,3 +1,8 @@
+### v3.2.0: September 1, 2022
+
+- Add `types` field in `package.json` for TypeScript
+- Migrate tests to [vitest](https://vitest.dev/)
+
 ### v3.1.0: January 6, 2022
 
 - Build ES Module package
