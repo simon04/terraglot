@@ -6,11 +6,13 @@
   "type": "module",
   "source": "./src/index.ts",
   "exports": {
+    "types": "./dist/index.d.ts",
     "require": "./dist/terraglot.cjs",
     "default": "./dist/terraglot.modern.js"
   },
   "main": "./dist/terraglot.cjs",
   "module": "./dist/terraglot.module.js",
+  "types": "./dist/index.d.ts",
   "unpkg": "./dist/terraglot.umd.js",
   "scripts": {
     "prepublish": "npm run build",
